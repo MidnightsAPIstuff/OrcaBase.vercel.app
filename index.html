@@ -1,61 +1,25 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>OrcaBase | Secure Repository</title>
-    <link rel="stylesheet" href="style.css">
-    <script src="https://unpkg.com/lucide@latest"></script>
-</head>
-<body>
-    <div class="ambient-glow"></div>
-    
-    <div class="app-container">
-        <aside class="sidebar">
-            <div class="logo">
-                <div class="logo-icon"></div>
-                <h1>Orca<span>Base</span></h1>
-            </div>
+<main class="content">
+    <div class="top-nav">
+        <div class="search-container">
+            <i data-lucide="search"></i>
+            <input type="text" placeholder="Search repository..." class="search-bar">
+        </div>
+    </div>
+
+    <section class="workspace">
+        <div class="upload-center-pane">
+            <button class="upload-btn-wide">
+                <i data-lucide="upload"></i> Upload Folder
+            </button>
             
-            <nav class="file-tree">
-                <p class="label">Filesystem</p>
-                <div class="tree-item active">
-                    <i data-lucide="folder"></i> <span>src</span>
-                </div>
-                <div class="tree-item indent">
-                    <i data-lucide="file-code"></i> <span>main.js</span>
-                </div>
-                <div class="tree-item indent">
-                    <i data-lucide="file-json"></i> <span>config.json</span>
-                </div>
-            </nav>
-
-            <div class="storage-card">
-                <p>Deep Storage</p>
-                <div class="progress-bar"><div class="fill"></div></div>
-            </div>
-        </aside>
-
-        <main class="content">
-            <header>
-                <div class="search-bar">
-                    <i data-lucide="search"></i>
-                    <input type="text" placeholder="Search repository...">
-                </div>
-                <button class="upload-btn" id="uploadBtn">
-                    <i data-lucide="upload"></i> Upload Folder
-                </button>
-            </header>
-
             <div class="drop-zone" id="dropZone">
                 <div class="glow-ring"></div>
                 <i data-lucide="cloud-lightning"></i>
                 <h3>Submerge folders here</h3>
                 <p>Drag and drop to initiate upload</p>
             </div>
-        </main>
-    </div>
+        </div>
+    </section>
+</main>
 
-    <script src="script.js"></script>
-</body>
 </html>

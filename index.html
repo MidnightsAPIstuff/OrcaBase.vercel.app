@@ -1,29 +1,81 @@
-<main class="content">
-    <div class="top-nav">
-        <div class="search-container">
-            <i data-lucide="search"></i>
-            <input type="text" placeholder="Search repository..." class="search-bar">
+<body>
+    <div class="ambient-glow"></div>
+    
+    <div class="app-container">
+        <aside class="sidebar">
+            <div class="logo">
+                <div class="logo-icon"></div>
+                <h1>Orca<span>Base</span></h1>
+            </div>
+            
+            <nav class="file-tree">
+                <p class="label">Filesystem</p>
+                </nav>
+
+            <div class="storage-card">
+                <p>Deep Storage</p>
+                <div class="progress-bar"><div class="fill"></div></div>
+            </div>
+        </aside>
+
+        <main class="content">
+            <div class="top-nav">
+                <div class="search-container">
+                    <i data-lucide="search"></i>
+                    <input type="text" placeholder="Search repository..." class="search-bar">
+                </div>
+            </div>
+
+            <section class="workspace">
+                <div class="upload-center-pane">
+                    <button class="upload-btn-wide">
+                        <i data-lucide="upload"></i> Upload Folder
+                    </button>
+                    
+                    <div class="drop-zone" id="dropZone">
+                        <div class="glow-ring"></div>
+                        <i data-lucide="cloud-lightning"></i>
+                        <h3>Submerge folders here</h3>
+                        <p>Drag and drop to initiate upload</p>
+                    </div>
+                </div>
+
+                <div class="code-viewer" id="codeViewer" style="display: none;">
+                    <div class="viewer-header">
+                        <span class="file-status">PREVIEW</span>
+                        <div class="header-actions">
+                            <button id="downloadZipBtn" class="download-btn">
+                                <i data-lucide="download-cloud"></i> Save Folder (.zip)
+                            </button>
+                            <div class="window-controls">
+                                <span></span><span></span><span></span>
+                            </div>
+                        </div>
+                    </div>
+                    <pre><code id="codeBlock"></code></pre>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <div id="shareOverlay" class="share-overlay hidden">
+        <div class="glass-modal">
+            <i data-lucide="check-circle" class="success-icon"></i>
+            <h2>Repository Submerged</h2>
+            <p>Your code is now live on OrcaBase.</p>
+            
+            <div class="link-box">
+                <span id="shareLink">Generating link...</span>
+                <button id="copyBtn"><i data-lucide="copy"></i></button>
+            </div>
+            
+            <button class="close-btn" onclick="closeOverlay()">Explore Files</button>
         </div>
     </div>
 
-    <section class="workspace">
-        <div class="upload-center-pane">
-            <button class="upload-btn-wide">
-                <i data-lucide="upload"></i> Upload Folder
-            </button>
-            
-            <div class="drop-zone" id="dropZone">
-                <div class="glow-ring"></div>
-                <i data-lucide="cloud-lightning"></i>
-                <h3>Submerge folders here</h3>
-                <p>Drag and drop to initiate upload</p>
-            </div>
-        </div>
-    </section>
-</main>
-
-</html>
-
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <script src="script.js"></script>
+</body>

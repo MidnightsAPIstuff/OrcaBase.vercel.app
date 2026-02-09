@@ -1,41 +1,44 @@
 lucide.createIcons();
 
 const dropZone = document.getElementById('dropZone');
+const shareOverlay = document.getElementById('shareOverlay');
+const shareLink = document.getElementById('shareLink');
 
-dropZone.addEventListener('dragover', (e) => {
+dropZone.addEventListener('drop', async (e) => {
     e.preventDefault();
-    dropZone.style.borderColor = '#22d3ee';
-    dropZone.style.boxShadow = '0 0 40px rgba(34, 211, 238, 0.2)';
-});
+    const items = e.dataTransfer.items;
+    let folderData = [];
 
-dropZone.addEventListener('dragleave', () => {
-    dropZone.style.borderColor = 'rgba(255, 255, 255, 0.1)';
-    dropZone.style.boxShadow = 'none';
-});
-
-dropZone.addEventListener('drop', (e) => {
-    e.preventDefault();
-    const files = e.dataTransfer.items;
-    
-    if (files) {
-        console.log("OrcaBase: Initializing folder upload...");
-        for (let i = 0; i < files.length; i++) {
-            const item = files[i].webkitGetAsEntry();
-            if (item) {
-                scanFiles(item);
-            }
+    for (let i = 0; i < items.length; i++) {
+        const entry = items[i].webkitGetAsEntry();
+        if (entry) {
+            await parseEntry(entry, folderData);
         }
     }
+
+    generateShareableLink(folderData);
 });
 
-function scanFiles(item, indent = "") {
-    if (item.isFile) {
-        console.log(indent + "File found: " + item.name);
-    } else if (item.isDirectory) {
-        console.log(indent + "Folder found: " + item.name);
-        let directoryReader = item.createReader();
-        directoryReader.readEntries((entries) => {
-            entries.forEach((entry) => scanFiles(entry, indent + "  "));
-        });
+async function parseEntry(entry, list, path = "") {
+    if (entry.isFile) {
+        const file = await new Promise(res => entry.file(res));
+        const content = await file.text();
+        list.push({ name: entry.name, path: path + entry.name, content: content });
+    } else if (entry.isDirectory) {
+        let reader = entry.createReader();
+        let entries = await new Promise(res => reader.readEntries(res));
+        for (let e of entries) {
+            await parseEntry(e, list, path + entry.name + "/");
+        }
     }
+}
+
+function generateShareableLink(data) {
+    const jsonStr = JSON.stringify(data);
+    const encodedData = btoa(unescape(encodeURIComponent(jsonStr)));
+    
+    const url = window.location.origin + window.location.pathname + '#' + encodedData;
+    
+    shareLink.innerText = url;
+    shareOverlay.classList.remove('hidden');
 }

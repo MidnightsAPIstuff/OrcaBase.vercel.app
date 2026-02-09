@@ -78,3 +78,19 @@
     max-width: 800px; /* Wider drop zone to match */
     height: 350px;
 }
+
+.viewer-mode .upload-center-pane {
+    display: none;
+}
+
+.viewer-mode .code-viewer {
+    display: block !important;
+    width: 100%;
+    height: 80vh;
+}
+
+/* Ensure the code viewer is hidden by default if not in viewer mode */
+.code-viewer {
+    display: none;
+    transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}

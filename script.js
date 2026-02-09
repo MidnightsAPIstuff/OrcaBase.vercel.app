@@ -42,3 +42,35 @@ function generateShareableLink(data) {
     shareLink.innerText = url;
     shareOverlay.classList.remove('hidden');
 }
+
+window.addEventListener('load', () => {
+    const hash = window.location.hash.substring(1);
+    if (hash) {
+        try {
+            const decodedData = JSON.parse(decodeURIComponent(escape(atob(hash))));
+            renderSharedRepository(decodedData);
+        } catch (e) {
+            console.error("OrcaBase: Invalid or corrupted link.");
+        }
+    }
+});
+
+function renderSharedRepository(files) {
+    const fileTree = document.querySelector('.file-tree');
+    fileTree.innerHTML = '<p class="label">Shared Repository</p>';
+
+    files.forEach(file => {
+        const div = document.createElement('div');
+        div.className = 'tree-item';
+        div.innerHTML = `<i data-lucide="file-code"></i> <span>${file.path}</span>`;
+        div.onclick = () => {
+            document.getElementById('codeBlock').innerText = file.content;
+            document.querySelector('.file-status').innerText = `VIEWING: ${file.path}`;
+        };
+        fileTree.appendChild(div);
+    });
+    
+    lucide.createIcons();
+    // Hide upload UI for viewers
+    document.querySelector('.workspace').classList.add('viewer-mode');
+}

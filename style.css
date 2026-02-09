@@ -1,0 +1,113 @@
+:root {
+    --bg: #020617;
+    --sidebar: rgba(15, 23, 42, 0.6);
+    --cyan: #22d3ee;
+    --blue: #3b82f6;
+    --text: #cbd5e1;
+}
+
+body {
+    background-color: var(--bg);
+    color: var(--text);
+    font-family: 'Segoe UI', system-ui, sans-serif;
+    margin: 0;
+    overflow: hidden;
+}
+
+.ambient-glow {
+    position: fixed;
+    top: -100px;
+    left: -100px;
+    width: 400px;
+    height: 400px;
+    background: radial-gradient(circle, rgba(34, 211, 238, 0.15) 0%, transparent 70%);
+    filter: blur(60px);
+    z-index: -1;
+}
+
+.app-container {
+    display: flex;
+    height: 100vh;
+}
+
+.sidebar {
+    width: 280px;
+    background: var(--sidebar);
+    backdrop-filter: blur(20px);
+    border-right: 1px solid rgba(255, 255, 255, 0.05);
+    padding: 2rem;
+    display: flex;
+    flex-direction: column;
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 3rem;
+}
+
+.logo-icon {
+    width: 32px;
+    height: 32px;
+    background: linear-gradient(135deg, var(--cyan), var(--blue));
+    border-radius: 8px;
+    box-shadow: 0 0 15px rgba(34, 211, 238, 0.4);
+}
+
+h1 {
+    font-size: 1.5rem;
+    color: white;
+    letter-spacing: -1px;
+}
+
+h1 span { color: var(--cyan); }
+
+.tree-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.tree-item.active {
+    background: rgba(34, 211, 238, 0.1);
+    color: var(--cyan);
+    border: 1px solid rgba(34, 211, 238, 0.2);
+}
+
+.drop-zone {
+    margin-top: 2rem;
+    height: 300px;
+    border: 2px dashed rgba(255, 255, 255, 0.1);
+    border-radius: 24px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    transition: 0.3s;
+}
+
+.drop-zone:hover {
+    border-color: var(--cyan);
+    background: rgba(34, 211, 238, 0.02);
+    box-shadow: 0 0 30px rgba(34, 211, 238, 0.05);
+}
+
+.upload-btn {
+    background: var(--cyan);
+    color: var(--bg);
+    border: none;
+    padding: 12px 24px;
+    border-radius: 50px;
+    font-weight: bold;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    box-shadow: 0 0 20px rgba(34, 211, 238, 0.3);
+}

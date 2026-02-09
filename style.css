@@ -94,3 +94,26 @@
     display: none;
     transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
 }
+
+/* Inside the code-viewer or codeBlock */
+#codeBlock h1, #codeBlock h2 {
+    color: var(--cyan);
+    border-bottom: 1px solid rgba(34, 211, 238, 0.2);
+    padding-bottom: 0.5rem;
+    margin-top: 1.5rem;
+}
+
+#codeBlock a {
+    color: var(--blue);
+    text-decoration: none;
+}
+
+#codeBlock a:hover {
+    text-shadow: 0 0 8px var(--blue);
+}
+
+#codeBlock ul {
+    list-style: disc;
+    padding-left: 1.5rem;
+    color: var(--text);
+}

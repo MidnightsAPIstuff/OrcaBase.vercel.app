@@ -1,21 +1,26 @@
 lucide.createIcons();
 
 const dropZone = document.getElementById('dropZone');
+const fileInput = document.getElementById('fileInput');
 const shareOverlay = document.getElementById('shareOverlay');
 const shareLink = document.getElementById('shareLink');
+const codeViewer = document.getElementById('codeViewer');
+const codeBlock = document.getElementById('codeBlock');
+let currentFiles = [];
 
+// 1. Handle Uploads
+fileInput.addEventListener('change', (e) => handleFiles(e.target.files));
+dropZone.addEventListener('dragover', (e) => { e.preventDefault(); dropZone.classList.add('dragover'); });
+dropZone.addEventListener('dragleave', () => dropZone.classList.remove('dragover'));
 dropZone.addEventListener('drop', async (e) => {
     e.preventDefault();
+    dropZone.classList.remove('dragover');
     const items = e.dataTransfer.items;
     let folderData = [];
-
     for (let i = 0; i < items.length; i++) {
         const entry = items[i].webkitGetAsEntry();
-        if (entry) {
-            await parseEntry(entry, folderData);
-        }
+        if (entry) await parseEntry(entry, folderData);
     }
-
     generateShareableLink(folderData);
 });
 
@@ -27,88 +32,60 @@ async function parseEntry(entry, list, path = "") {
     } else if (entry.isDirectory) {
         let reader = entry.createReader();
         let entries = await new Promise(res => reader.readEntries(res));
-        for (let e of entries) {
-            await parseEntry(e, list, path + entry.name + "/");
-        }
+        for (let e of entries) await parseEntry(e, list, path + entry.name + "/");
     }
 }
 
+// 2. Generate functioning link
 function generateShareableLink(data) {
     const jsonStr = JSON.stringify(data);
     const encodedData = btoa(unescape(encodeURIComponent(jsonStr)));
-    
     const url = window.location.origin + window.location.pathname + '#' + encodedData;
-    
     shareLink.innerText = url;
     shareOverlay.classList.remove('hidden');
 }
 
-window.addEventListener('load', () => {
-    const hash = window.location.hash.substring(1);
-    if (hash) {
-        try {
-            const decodedData = JSON.parse(decodeURIComponent(escape(atob(hash))));
-            renderSharedRepository(decodedData);
-        } catch (e) {
-            console.error("OrcaBase: Invalid or corrupted link.");
-        }
-    }
-});
-
-let currentSharedFiles = [];
-
-function renderSharedRepository(files) {
-    currentSharedFiles = files;
-    const fileTree = document.querySelector('.file-tree');
-    const codeBlock = document.getElementById('codeBlock');
-    fileTree.innerHTML = '<p class="label">Shared Repository</p>';
-
-    // Look for README
-    const readmeFile = files.find(f => f.name.toLowerCase() === 'readme.md');
+// 3. Render View
+function renderRepo(files) {
+    currentFiles = files;
+    const tree = document.querySelector('.file-tree');
+    tree.innerHTML = '<p class="label">Shared Repository</p>';
     
-    if (readmeFile) {
-        // Use marked.parse to turn Markdown into HTML
-        codeBlock.innerHTML = marked.parse(readmeFile.content);
-        document.querySelector('.file-status').innerText = "SYSTEM: README.md";
-    }
-
     files.forEach(file => {
         const div = document.createElement('div');
         div.className = 'tree-item';
-        div.innerHTML = `<i data-lucide="file-code"></i> <span>${file.path}</span>`;
-        
+        div.style.padding = "10px"; div.style.cursor = "pointer";
+        div.innerHTML = `<span>${file.path}</span>`;
         div.onclick = () => {
-            // If it's markdown, render it; otherwise, show plain text
-            if (file.name.endsWith('.md')) {
-                codeBlock.innerHTML = marked.parse(file.content);
-            } else {
-                codeBlock.innerText = file.content;
-            }
+            codeBlock.innerText = file.content;
             document.querySelector('.file-status').innerText = `VIEWING: ${file.path}`;
         };
-        fileTree.appendChild(div);
+        tree.appendChild(div);
     });
-
-    document.getElementById('downloadZipBtn').style.display = 'flex';
-    lucide.createIcons();
     document.querySelector('.workspace').classList.add('viewer-mode');
+    document.getElementById('downloadZipBtn').style.display = 'flex';
 }
 
-// ZIP Download Event
+// 4. Initialization & Download
+window.addEventListener('load', () => {
+    const hash = window.location.hash.substring(1);
+    if (hash) {
+        const decoded = JSON.parse(decodeURIComponent(escape(atob(hash))));
+        renderRepo(decoded);
+    }
+});
+
 document.getElementById('downloadZipBtn').addEventListener('click', () => {
     const zip = new JSZip();
-    
-    currentSharedFiles.forEach(file => {
-        zip.file(file.path, file.content);
-    });
-
-    zip.generateAsync({ type: "blob" }).then((content) => {
-        saveAs(content, "OrcaBase_Project.zip");
-    });
+    currentFiles.forEach(f => zip.file(f.path, f.content));
+    zip.generateAsync({type:"blob"}).then(content => saveAs(content, "OrcaBase_Repo.zip"));
 });
-    
-    lucide.createIcons();
-    // Hide upload UI for viewers
-    document.querySelector('.workspace').classList.add('viewer-mode');
+
+function closeOverlay() {
+    window.location.reload(); // Refresh to trigger the hash reader
 }
 
+document.getElementById('copyBtn').addEventListener('click', () => {
+    navigator.clipboard.writeText(shareLink.innerText);
+    alert("Link Copied!");
+});
